@@ -1,0 +1,69 @@
+---
+# a service has experiments
+# an experiment has treatments
+# a cohort is assigned to a treatment
+# a client is assigned to a cohort
+# constraint: a client can only be assigned to one cohort per service
+
+- service-name: svc-a
+  service-experiments:
+    - experiment-name: exp-a
+      default-experiment: true
+      treatments:
+        - treatment-name: t1
+          treatment-route:
+            type: url-rewrite
+            target-pattern: "/svc-a/exp-a-t1?client-id={client-id}"
+          assigned-cohorts:
+            - c1
+        - treatment-name: t2
+          treatment-route:
+            type: url-rewrite
+            target-pattern: "/svc-a/exp-a-t2?client-id={client-id}"
+          assigned-cohorts:
+            - c2
+        - treatment-name: default
+          treatment-route:
+            type: url-rewrite
+            target-pattern: "/svc-a/exp-a-default?client-id={client-id}"
+          default-treatment: true
+          assigned-cohorts: []
+
+    - experiment-name: exp-b
+      treatments:
+        - treatment-name: t3
+          treatement-route:
+            type: query-parameter
+            target-pattern: "/svc-a/exp-b?client-id={client-id}&treatment=t3"
+          assigned-cohorts:
+            - c3
+        - treatment-name: t4
+          treatement-route:
+            type: query-parameter
+            target-pattern: "/svc-a/exp-b?client-id={client-id}&treatment=t4"
+          assigned-cohorts:
+            - c4
+
+  service-cohorts:
+    - cohort-name: c1
+      client-ids:
+        - 1234
+    - cohort-name: c2
+      client-ids:
+        - 9876
+    - cohort-name: c3
+      client-ids: []
+    - cohort-name: c4
+      client-ids: []
+
+- service-name: svc-b
+  service-experiments:
+    - experiment-name: exp-c
+      default-experiment: true
+      treatments:
+        - treatment-name: t5
+          treatement-route:
+            type: url-rewrite
+            target-pattern: "/svc-b/exp-c?client-id={client-id}&treatment=t5"
+          assigned-cohorts: []
+          default-treatment: true

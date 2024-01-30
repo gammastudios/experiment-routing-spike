@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "xp-rtr"
+version = "0.1.0"
+description = "Experiment treatment http request router functional implementation"
+authors = ["Chris Ottinger <chris.ottinger@gammadata.io>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.109.0"
+structlog = "^24.1.0"
+uvicorn = "^0.27.0.post1"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.0.0"
+black = "^24.1.1"
+pre-commit = "^3.6.0"
+pytest = "^8.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

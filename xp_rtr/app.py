@@ -10,7 +10,10 @@ import os
 
 # service map from a file
 service_mapping_filename = 'client-cohort-map.yml'
-service_map = {}
+
+service_client_map = {} # lookup cohort-name by service-name & client-id 
+service_treatment_map = {} # lookup treatment by service-name & cohort-name
+
 
 def load_service_map(file_path):
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,14 +21,24 @@ def load_service_map(file_path):
     with open(relative_path, 'r') as file:
         data = yaml.safe_load(file)
 
-    # convert the service map into a structure that makes for fast lookup ups of
-    #
-    # select experiment, treatment-id
-    # from service_map
-    # where client-id = <client-id>
-    #   and service-name = <service-name>
-    #
-    # | client-id | service-name | cohort | experiment | treatment |
+    # construct the service client map and service treatment map
+    for svc in data:
+        service_name = svc['service-name']
+        service_client_map[service_name] = {}
+        for cohort in svc['service-cohorts']:
+            for client_id in cohort['client-ids']:
+                service_client_map[service_name][client_id] = cohort['cohort-name']
+
+        service_treatment_map[service_name] = {}
+        for exp in svc['service-experiments']:
+            for treatment in exp['treatments']:
+                for cohort_name in treatment['assigned-cohorts']:
+                    service_treatment_map[service_name][cohort_name] = treatment['treatment-name']
+
+    print("client_mapping to cohort")
+    print(service_client_map)
+    print(service_treatment_map)
+
 
     # service.experiment.treatment.cohort
 
@@ -33,11 +46,6 @@ def load_service_map(file_path):
     # from treatments
     # where treatment-id = <treatment-id>
     # | treatment | treatment-details |
-    
-    for svc_map in data:
-        print(f"found service: {svc['service-name']}")
-        service_map[svc_map['service-name']] = svc
-
     return data
 
 
@@ -46,6 +54,7 @@ async def lifespan(app: FastAPI):
     global service_map
     service_map = load_service_map(service_mapping_filename)
     yield
+
 
 def treatment_lookup(service_name, client_id):
     """

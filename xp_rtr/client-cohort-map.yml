@@ -37,12 +37,12 @@
             target-pattern: "/svc-a/exp-b?client-id={client-id}&treatment=t3"
           assigned-cohorts:
             - c3
+            - c4
         - treatment-name: t4
           treatement-route:
             type: query-parameter
             target-pattern: "/svc-a/exp-b?client-id={client-id}&treatment=t4"
-          assigned-cohorts:
-            - c4
+          assigned-cohorts: []
 
   service-cohorts:
     - cohort-name: c1
@@ -65,5 +65,10 @@
           treatement-route:
             type: url-rewrite
             target-pattern: "/svc-b/exp-c?client-id={client-id}&treatment=t5"
-          assigned-cohorts: []
+          assigned-cohorts:
+            - c3
           default-treatment: true
+  service-cohorts:
+    - cohort-name: c3
+      client-ids:
+        - 1234

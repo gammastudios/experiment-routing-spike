@@ -4,8 +4,14 @@
 # a cohort is assigned to a treatment
 # a client is assigned to a cohort
 # constraint: a client can only be assigned to one cohort per service
+# currently defined such that a service uses 1 single cohort strategy however, provided a given client 
+#   only ever is allocated to one treatment across experiments in a service, it is possible to have 
+#   differing cohort strategies for different experiments within the same service.  This enables a lookup
+#   of treatment using a key of `[ service-name, client-id ]`
 
+services:
 - service-name: svc-a
+  service-cohort-strategy: round-robin
   service-experiments:
     - experiment-name: exp-a
       default-experiment: true
@@ -44,19 +50,8 @@
             target-pattern: "/svc-a/exp-b?{{ query_string }}&treatment=t4"
           assigned-cohorts: []
 
-  service-cohorts:
-    - cohort-name: c1
-      client-ids:
-        - 1234
-    - cohort-name: c2
-      client-ids:
-        - 9876
-    - cohort-name: c3
-      client-ids: []
-    - cohort-name: c4
-      client-ids: []
-
 - service-name: svc-b
+  service-cohort-strategy: random
   service-experiments:
     - experiment-name: exp-c
       default-experiment: true
@@ -68,7 +63,23 @@
           assigned-cohorts:
             - c3
           default-treatment: true
-  service-cohorts:
+
+
+cohort-strategies:
+- cohort-strategy-name: round-robin
+  cohorts:
+    - cohort-name: c1
+      client-ids:
+        - 1234
+    - cohort-name: c2
+      client-ids:
+        - 9876
+    - cohort-name: c3
+      client-ids: []
+    - cohort-name: c4
+      client-ids: []
+- cohort-strategy-name: random
+  cohorts:
     - cohort-name: c3
       client-ids:
         - 1234

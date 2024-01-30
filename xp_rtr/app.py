@@ -21,6 +21,7 @@ from fastapi import Request
 # service map from a file
 service_mapping_filename = "client-cohort-map.yml"
 
+cohort_strategies_map = {}  # strategies for cohort assignment [ strategy-name, chort-name ] = list of client ids 
 service_client_map = {}  # lookup cohort-name by service-name & client-id
 service_treatment_map = {}  # lookup treatment by service-name & cohort-name
 treatment_routes = {}  # lookup treatment details by treatment-name
@@ -37,11 +38,19 @@ def load_service_map(file_path):
         data = yaml.safe_load(file)
 
     # construct the service client map and service treatment map
-    for svc in data:
+    for cohort_strategy in data['cohort-strategies']:
+        cohort_strategy_name = cohort_strategy["cohort-strategy-name"]
+        cohort_strategies_map[cohort_strategy_name] = cohort_strategy['cohorts']
+    logger.debug('chort strategies', cohort_strategies_map=cohort_strategies_map)
+
+    for svc in data['services']:
         service_name = svc["service-name"]
         service_client_map[service_name] = {}
-        for cohort in svc["service-cohorts"]:
+        # for cohort in svc["service-cohorts"]:
+        for cohort in cohort_strategies_map[svc["service-cohort-strategy"]]:
+            logger.info('cohort', cohort=cohort)
             for client_id in cohort["client-ids"]:
+                logger.info('here')
                 service_client_map[service_name][client_id] = cohort["cohort-name"]
 
         service_treatment_map[service_name] = {}

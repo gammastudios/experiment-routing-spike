@@ -8,9 +8,11 @@ classDiagram
     Service "1" --> "1..*" Experiment : service-experiments
     Experiment "1" --> "1..*" Treatment : treatments
     Treatment "1" <-- "1..*" Cohort : cohort-treatment
-    Cohort "1..*" --> "1" Service : service-cohorts
+    CohortStrategy "1" --> "1..*" Service : service-cohort-strateguy
+    Cohort --* CohortStrategy : cohort-groups
     Client "1" --> "1..*" Cohort : cohort-assignment
     note for Client "Client only assigned to 1 Cohort per Service"
+    note for CohortStrategy "CohortStrategy's associated with multiple services"
 ```
 
 ## User Stories - Experiment request routing

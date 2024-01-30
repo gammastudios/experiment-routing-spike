@@ -12,36 +12,36 @@
       treatments:
         - treatment-name: t1
           treatment-route:
-            type: url-rewrite
-            target-pattern: "/svc-a/exp-a-t1?client-id={client-id}"
+            type: template 
+            target-pattern: "/svc-a/exp-a-t1?{{ query_string }}"
           assigned-cohorts:
             - c1
         - treatment-name: t2
           treatment-route:
-            type: url-rewrite
-            target-pattern: "/svc-a/exp-a-t2?client-id={client-id}"
+            type: template
+            target-pattern: "/svc-a/exp-a-t2?{{ query_string }}"
           assigned-cohorts:
             - c2
         - treatment-name: default
           treatment-route:
-            type: url-rewrite
-            target-pattern: "/svc-a/exp-a-default?client-id={client-id}"
+            type: template
+            target-pattern: "/svc-a/exp-a-default?{{ query_string }}"
           default-treatment: true
           assigned-cohorts: []
 
     - experiment-name: exp-b
       treatments:
         - treatment-name: t3
-          treatement-route:
-            type: query-parameter
-            target-pattern: "/svc-a/exp-b?client-id={client-id}&treatment=t3"
+          treatment-route:
+            type: template 
+            target-pattern: "/svc-a/exp-b?{{ query_string }}&treatment=t3"
           assigned-cohorts:
             - c3
             - c4
         - treatment-name: t4
-          treatement-route:
-            type: query-parameter
-            target-pattern: "/svc-a/exp-b?client-id={client-id}&treatment=t4"
+          treatment-route:
+            type: template 
+            target-pattern: "/svc-a/exp-b?{{ query_string }}&treatment=t4"
           assigned-cohorts: []
 
   service-cohorts:
@@ -62,9 +62,9 @@
       default-experiment: true
       treatments:
         - treatment-name: t5
-          treatement-route:
+          treatment-route:
             type: url-rewrite
-            target-pattern: "/svc-b/exp-c?client-id={client-id}&treatment=t5"
+            target-pattern: "/svc-b/exp-c?{{ query_string }}&treatment=t5"
           assigned-cohorts:
             - c3
           default-treatment: true

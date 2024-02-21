@@ -1,0 +1,8 @@
+---
+master:
+  service:
+    type: NodePort 
+    nodePorts:
+      redis: 30000
+  persistence:
+    size: 50m

@@ -11,7 +11,7 @@
 
 services:
 - service-name: svc-a
-  service-cohort-strategy: round-robin
+  service-cohort-strategy: random
   service-experiments:
     - experiment-name: exp-a
       default-experiment: true
@@ -66,7 +66,7 @@ services:
 
 
 cohort-strategies:
-- cohort-strategy-name: round-robin
+- cohort-strategy-name: mod100
   cohorts:
     - cohort-name: c1
       client-ids:
